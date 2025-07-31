@@ -1,80 +1,85 @@
--- Удалить, если уже открыт
-pcall(function() game.CoreGui.SimpleGui:Destroy() end)
+pcall(function() game.CoreGui.ViroGui:Destroy() end)
 
 -- Создание GUI
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "SimpleGui"
+ScreenGui.Name = "ViroGui"
 ScreenGui.Parent = game.CoreGui
 
 -- Основной фрейм
-local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0, 300, 0, 150)
-Frame.Position = UDim2.new(0.5, -150, 0.5, -75)
-Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Frame.BorderSizePixel = 0
-Frame.Visible = true
-Frame.Parent = ScreenGui
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 400, 0, 250)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -125)
+MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
 
--- Поле для ввода
-local TextBox = Instance.new("TextBox")
-TextBox.PlaceholderText = "Введите текст..."
-TextBox.Size = UDim2.new(0, 280, 0, 40)
-TextBox.Position = UDim2.new(0, 10, 0, 10)
-TextBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-TextBox.TextColor3 = Color3.new(1, 1, 1)
-TextBox.ClearTextOnFocus = false
-TextBox.Parent = Frame
+-- Градиент фона
+local UIGradient = Instance.new("UIGradient")
+UIGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(15, 15, 50)), -- Тёмно-синий
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 0, 100))  -- Фиолетовый
+}
+UIGradient.Rotation = 45
+UIGradient.Parent = MainFrame
 
--- Кнопка отправить
-local SubmitButton = Instance.new("TextButton")
-SubmitButton.Text = "Отправить"
-SubmitButton.Size = UDim2.new(0, 130, 0, 35)
-SubmitButton.Position = UDim2.new(0, 10, 0, 60)
-SubmitButton.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
-SubmitButton.TextColor3 = Color3.new(1, 1, 1)
-SubmitButton.Parent = Frame
+-- Заголовок
+local Title = Instance.new("TextLabel")
+Title.Text = "Viro script"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 14
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.BackgroundTransparency = 1
+Title.Size = UDim2.new(1, 0, 0, 20)
+Title.Position = UDim2.new(0, 0, 0, 10)
+Title.Parent = MainFrame
 
--- Кнопка со ссылкой
-local LinkButton = Instance.new("TextButton")
-LinkButton.Text = "Перейти в Telegram"
-LinkButton.Size = UDim2.new(0, 130, 0, 35)
-LinkButton.Position = UDim2.new(0, 160, 0, 60)
-LinkButton.BackgroundColor3 = Color3.fromRGB(50, 100, 200)
-LinkButton.TextColor3 = Color3.new(1, 1, 1)
-LinkButton.Parent = Frame
+-- Поле ввода
+local CodeBox = Instance.new("TextBox")
+CodeBox.PlaceholderText = "Введите код..."
+CodeBox.Size = UDim2.new(0, 360, 0, 35)
+CodeBox.Position = UDim2.new(0, 20, 0, 40)
+CodeBox.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+CodeBox.TextColor3 = Color3.new(1, 1, 1)
+CodeBox.TextSize = 16
+CodeBox.Font = Enum.Font.SourceSans
+CodeBox.ClearTextOnFocus = false
+CodeBox.Parent = MainFrame
 
--- Обработчик "Отправить"
-SubmitButton.MouseButton1Click:Connect(function()
-    print("Вы ввели: " .. TextBox.Text)
+-- Универсальная функция для кнопок
+local function createButton(text, posY, callback)
+    local button = Instance.new("TextButton")
+    button.Text = text
+    button.Size = UDim2.new(0, 360, 0, 35)
+    button.Position = UDim2.new(0, 20, 0, posY)
+    button.BackgroundColor3 = Color3.fromRGB(45, 45, 60)
+    button.TextColor3 = Color3.new(1, 1, 1)
+    button.TextSize = 15
+    button.Font = Enum.Font.GothamMedium
+    button.BorderSizePixel = 0
+    button.AutoButtonColor = true
+
+    -- Скругление
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = button
+
+    button.MouseButton1Click:Connect(callback)
+    button.Parent = MainFrame
+end
+
+-- Кнопка "Панель ввода кода"
+createButton("Панель ввода кода", 90, function()
+    print("Открыта панель ввода кода")
 end)
 
--- Обработчик перехода по ссылке
-LinkButton.MouseButton1Click:Connect(function()
-    setclipboard("https://t.me/yourchannel") -- ← Ваша ссылка
-    print("Ссылка скопирована!")
+-- Кнопка "Получить код"
+createButton("Получить код", 135, function()
+    setclipboard("https://go.linkify.ru/27MV")
+    print("Ссылка скопирована в буфер обмена!")
 end)
 
--- // Кнопка-сворачивающая аватарка (в стиле Берсерка)
-
-local ToggleButton = Instance.new("ImageButton")
-ToggleButton.Name = "BerserkIcon"
-ToggleButton.Size = UDim2.new(0, 50, 0, 50)
-ToggleButton.Position = UDim2.new(0, 10, 0, 10)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-ToggleButton.BackgroundTransparency = 0
-ToggleButton.BorderSizePixel = 0
-ToggleButton.Image = "rbxassetid://15468381138" -- <- ID символа жертвы из Берсерка (белый на чёрном)
-ToggleButton.ScaleType = Enum.ScaleType.Fit
-ToggleButton.Parent = ScreenGui
-
--- Округление аватарки
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(1, 0) -- круг
-UICorner.Parent = ToggleButton
-
--- Переключение видимости фрейма
-local toggled = true
-ToggleButton.MouseButton1Click:Connect(function()
-    toggled = not toggled
-    Frame.Visible = toggled
+-- Кнопка "Продолжить"
+createButton("Продолжить", 180, function()
+    print("Нажата кнопка Продолжить. Введённый код:", CodeBox.Text)
 end)
