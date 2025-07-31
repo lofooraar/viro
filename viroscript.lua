@@ -1,7 +1,8 @@
 -- Удаляем старый GUI
+-- Удаление старого GUI
 pcall(function() game.CoreGui.ViroGui:Destroy() end)
 
--- Создаём GUI
+-- Создание GUI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ViroGui"
 ScreenGui.Parent = game.CoreGui
@@ -14,7 +15,7 @@ MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BorderSizePixel = 0
 MainFrame.Parent = ScreenGui
 
--- Градиент
+-- Градиент фона
 local UIGradient = Instance.new("UIGradient")
 UIGradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 70)),
@@ -34,7 +35,7 @@ Title.Size = UDim2.new(1, 0, 0, 20)
 Title.Position = UDim2.new(0, 0, 0, 10)
 Title.Parent = MainFrame
 
--- Поле ввода кода
+-- Поле ввода
 local CodeBox = Instance.new("TextBox")
 CodeBox.PlaceholderText = "Введите код..."
 CodeBox.Size = UDim2.new(0, 360, 0, 35)
@@ -51,7 +52,7 @@ local CodeCorner = Instance.new("UICorner")
 CodeCorner.CornerRadius = UDim.new(0, 6)
 CodeCorner.Parent = CodeBox
 
--- Универсальная функция кнопки
+-- Универсальная кнопка
 local function createButton(text, posY, callback)
     local btn = Instance.new("TextButton")
     btn.Text = text
@@ -72,21 +73,27 @@ local function createButton(text, posY, callback)
     btn.Parent = MainFrame
 end
 
--- Кнопки
-createButton("Панель ввода кода", 90, function()
-    print("Панель ввода активирована")
+-- Кнопка "Получить код" — ОТКРЫВАЕТ ССЫЛКУ
+createButton("Получить код", 90, function()
+    local url = "https://go.linkify.ru/27MV"
+    if syn and syn.request then
+        syn.request({
+            Url = url,
+            Method = "GET"
+        })
+        print("Открыта ссылка:", url)
+    else
+        setclipboard(url)
+        print("Ваш инжектор не поддерживает открытие ссылок. Ссылка скопирована в буфер обмена.")
+    end
 end)
 
-createButton("Получить код", 135, function()
-    setclipboard("https://go.linkify.ru/27MV")
-    print("Ссылка скопирована в буфер обмена")
+-- Кнопка "Продолжить"
+createButton("Продолжить", 140, function()
+    print("Код введён:", CodeBox.Text)
 end)
 
-createButton("Продолжить", 180, function()
-    print("Продолжить с кодом:", CodeBox.Text)
-end)
-
--- КРУГЛАЯ КНОПКА-СВЕРНУТЬ (без иконки, просто чёрный круг)
+-- Кнопка-сворачивание
 local ToggleButton = Instance.new("TextButton")
 ToggleButton.Size = UDim2.new(0, 40, 0, 40)
 ToggleButton.Position = UDim2.new(0, 10, 0, 10)
@@ -99,7 +106,7 @@ local Circle = Instance.new("UICorner")
 Circle.CornerRadius = UDim.new(1, 0)
 Circle.Parent = ToggleButton
 
--- Переключатель видимости
+-- Скрыть/показать
 local toggled = true
 ToggleButton.MouseButton1Click:Connect(function()
     toggled = not toggled
