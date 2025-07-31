@@ -1,8 +1,12 @@
+-- Получаем PlayerGui вместо CoreGui
+local player = game:GetService("Players").LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
 -- Создание ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "CodeVerification"
 ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = game.CoreGui
+ScreenGui.Parent = playerGui
 
 -- Фрейм
 local Frame = Instance.new("Frame")
@@ -15,7 +19,7 @@ Frame.Parent = ScreenGui
 -- Заголовок
 local Title = Instance.new("TextLabel")
 Title.Text = "Введите код доступа"
-Title.Font = Enum.Font.GothamBold
+Title.Font = Enum.Font.SourceSansBold  -- GothamBold может не поддерживаться
 Title.TextSize = 18
 Title.Size = UDim2.new(1, 0, 0, 40)
 Title.BackgroundTransparency = 1
@@ -25,8 +29,9 @@ Title.Parent = Frame
 -- Поле ввода
 local TextBox = Instance.new("TextBox")
 TextBox.PlaceholderText = "Введите код..."
-TextBox.Font = Enum.Font.Gotham
+TextBox.Font = Enum.Font.SourceSans
 TextBox.TextSize = 16
+TextBox.ClearTextOnFocus = false
 TextBox.Size = UDim2.new(0.8, 0, 0, 40)
 TextBox.Position = UDim2.new(0.1, 0, 0.4, 0)
 TextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
@@ -36,7 +41,7 @@ TextBox.Parent = Frame
 -- Кнопка подтверждения
 local Button = Instance.new("TextButton")
 Button.Text = "Подтвердить"
-Button.Font = Enum.Font.GothamBold
+Button.Font = Enum.Font.SourceSansBold
 Button.TextSize = 16
 Button.Size = UDim2.new(0.6, 0, 0, 35)
 Button.Position = UDim2.new(0.2, 0, 0.75, 0)
@@ -44,20 +49,22 @@ Button.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
 Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Button.Parent = Frame
 
--- Обработка нажатия кнопки
+-- Список валидных кодов
 local VALID_CODES = {
     ["123456"] = true,
     ["ABCDEF"] = true
 }
 
+-- Обработка нажатия кнопки
 Button.MouseButton1Click:Connect(function()
-    local inputCode = TextBox.Text
+    local inputCode = TextBox.Text:upper()  -- приводим к верхнему регистру для надёжности
     if VALID_CODES[inputCode] then
         Title.Text = "Код принят!"
         wait(1)
         ScreenGui:Destroy()
-        -- Продолжение скрипта можно вставить здесь
+        -- Здесь можно продолжить выполнение основного скрипта
     else
         Title.Text = "Неверный код!"
+        -- можно добавить краткую анимацию или мигание, если хочется
     end
 end)
