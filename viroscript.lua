@@ -1,7 +1,7 @@
 -- Удаляем старый GUI
 pcall(function() game.CoreGui.ViroGui:Destroy() end)
 
--- Создание GUI
+-- Создаём GUI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ViroGui"
 ScreenGui.Parent = game.CoreGui
@@ -34,7 +34,7 @@ Title.Size = UDim2.new(1, 0, 0, 20)
 Title.Position = UDim2.new(0, 0, 0, 10)
 Title.Parent = MainFrame
 
--- Текстбокс
+-- Поле ввода кода
 local CodeBox = Instance.new("TextBox")
 CodeBox.PlaceholderText = "Введите код..."
 CodeBox.Size = UDim2.new(0, 360, 0, 35)
@@ -47,12 +47,11 @@ CodeBox.ClearTextOnFocus = false
 CodeBox.BorderSizePixel = 0
 CodeBox.Parent = MainFrame
 
--- Скругление поля ввода
 local CodeCorner = Instance.new("UICorner")
 CodeCorner.CornerRadius = UDim.new(0, 6)
 CodeCorner.Parent = CodeBox
 
--- Универсальная кнопка
+-- Универсальная функция кнопки
 local function createButton(text, posY, callback)
     local btn = Instance.new("TextButton")
     btn.Text = text
@@ -75,39 +74,34 @@ end
 
 -- Кнопки
 createButton("Панель ввода кода", 90, function()
-    print("Открыта панель ввода кода")
+    print("Панель ввода активирована")
 end)
 
 createButton("Получить код", 135, function()
     setclipboard("https://go.linkify.ru/27MV")
-    print("Ссылка скопирована в буфер обмена!")
+    print("Ссылка скопирована в буфер обмена")
 end)
 
 createButton("Продолжить", 180, function()
     print("Продолжить с кодом:", CodeBox.Text)
 end)
 
--- // КНОПКА-АВАТАРКА (для сворачивания интерфейса)
-
-local ToggleButton = Instance.new("ImageButton")
-ToggleButton.Name = "BerserkIcon"
+-- КРУГЛАЯ КНОПКА-СВЕРНУТЬ (без иконки, просто чёрный круг)
+local ToggleButton = Instance.new("TextButton")
 ToggleButton.Size = UDim2.new(0, 40, 0, 40)
 ToggleButton.Position = UDim2.new(0, 10, 0, 10)
 ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-ToggleButton.BackgroundTransparency = 0
+ToggleButton.Text = ""
 ToggleButton.BorderSizePixel = 0
-ToggleButton.Image = "rbxassetid://15468381138" -- Символ "Берсерка"
-ToggleButton.ScaleType = Enum.ScaleType.Fit
 ToggleButton.Parent = ScreenGui
 
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(1, 0) -- Круглая
-UICorner.Parent = ToggleButton
+local Circle = Instance.new("UICorner")
+Circle.CornerRadius = UDim.new(1, 0)
+Circle.Parent = ToggleButton
 
--- Сворачивание
+-- Переключатель видимости
 local toggled = true
 ToggleButton.MouseButton1Click:Connect(function()
     toggled = not toggled
     MainFrame.Visible = toggled
 end)
-
