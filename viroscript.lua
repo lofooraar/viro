@@ -76,16 +76,36 @@ end
 -- Кнопка "Получить код" — ОТКРЫВАЕТ ССЫЛКУ
 createButton("Получить код", 90, function()
     local url = "https://go.linkify.ru/27MV"
-    if syn and syn.request then
-        syn.request({
-            Url = url,
-            Method = "GET"
-        })
-        print("Открыта ссылка:", url)
-    else
-        setclipboard(url)
-        print("Ваш инжектор не поддерживает открытие ссылок. Ссылка скопирована в буфер обмена.")
+
+    -- Попробуем скопировать ссылку, если поддерживается
+    local clipboardSuccess = false
+    if setclipboard then
+        pcall(function()
+            setclipboard(url)
+            clipboardSuccess = true
+        end)
     end
+
+    -- Покажем ссылку в поле (на всякий случай)
+    CodeBox.Text = url
+
+    -- Добавим уведомление снизу
+    local notify = Instance.new("TextLabel")
+    notify.Text = "Ссылка " .. (clipboardSuccess and "добавлена в буфер обмена" or "отображена выше") .. ", вставьте её в браузер для получения кода"
+    notify.Size = UDim2.new(1, -40, 0, 35)
+    notify.Position = UDim2.new(0, 20, 1, -45)
+    notify.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    notify.TextColor3 = Color3.fromRGB(200, 200, 200)
+    notify.Font = Enum.Font.Gotham
+    notify.TextSize = 14
+    notify.TextWrapped = true
+    notify.TextXAlignment = Enum.TextXAlignment.Center
+    notify.TextYAlignment = Enum.TextYAlignment.Center
+    notify.Parent = MainFrame
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = notify
 end)
 
 -- Кнопка "Продолжить"
