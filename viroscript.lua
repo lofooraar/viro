@@ -1,70 +1,59 @@
--- Получаем PlayerGui вместо CoreGui
-local player = game:GetService("Players").LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+-- // Простой GUI для Roblox (подходит для Delta Executor)
 
--- Создание ScreenGui
+-- Удаление предыдущего GUI (если есть)
+pcall(function() game.CoreGui.SimpleGui:Destroy() end)
+
+-- Создание интерфейса
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "CodeVerification"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = playerGui
+ScreenGui.Name = "SimpleGui"
+ScreenGui.Parent = game.CoreGui
 
--- Фрейм
+-- Основной фрейм
 local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0, 300, 0, 180)
-Frame.Position = UDim2.new(0.5, -150, 0.5, -90)
-Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Frame.Size = UDim2.new(0, 300, 0, 150)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Frame.BorderSizePixel = 0
 Frame.Parent = ScreenGui
 
--- Заголовок
-local Title = Instance.new("TextLabel")
-Title.Text = "Введите код доступа"
-Title.Font = Enum.Font.SourceSansBold  -- GothamBold может не поддерживаться
-Title.TextSize = 18
-Title.Size = UDim2.new(1, 0, 0, 40)
-Title.BackgroundTransparency = 1
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.Parent = Frame
-
--- Поле ввода
+-- Поле для ввода
 local TextBox = Instance.new("TextBox")
-TextBox.PlaceholderText = "Введите код..."
-TextBox.Font = Enum.Font.SourceSans
-TextBox.TextSize = 16
+TextBox.PlaceholderText = "Введите текст..."
+TextBox.Size = UDim2.new(0, 280, 0, 40)
+TextBox.Position = UDim2.new(0, 10, 0, 10)
+TextBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+TextBox.TextColor3 = Color3.new(1, 1, 1)
 TextBox.ClearTextOnFocus = false
-TextBox.Size = UDim2.new(0.8, 0, 0, 40)
-TextBox.Position = UDim2.new(0.1, 0, 0.4, 0)
-TextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextBox.Parent = Frame
 
--- Кнопка подтверждения
-local Button = Instance.new("TextButton")
-Button.Text = "Подтвердить"
-Button.Font = Enum.Font.SourceSansBold
-Button.TextSize = 16
-Button.Size = UDim2.new(0.6, 0, 0, 35)
-Button.Position = UDim2.new(0.2, 0, 0.75, 0)
-Button.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
-Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-Button.Parent = Frame
+-- Кнопка отправить
+local SubmitButton = Instance.new("TextButton")
+SubmitButton.Text = "Отправить"
+SubmitButton.Size = UDim2.new(0, 130, 0, 35)
+SubmitButton.Position = UDim2.new(0, 10, 0, 60)
+SubmitButton.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+SubmitButton.TextColor3 = Color3.new(1, 1, 1)
+SubmitButton.Parent = Frame
 
--- Список валидных кодов
-local VALID_CODES = {
-    ["123456"] = true,
-    ["ABCDEF"] = true
-}
+-- Кнопка со ссылкой
+local LinkButton = Instance.new("TextButton")
+LinkButton.Text = "Перейти в Telegram"
+LinkButton.Size = UDim2.new(0, 130, 0, 35)
+LinkButton.Position = UDim2.new(0, 160, 0, 60)
+LinkButton.BackgroundColor3 = Color3.fromRGB(50, 100, 200)
+LinkButton.TextColor3 = Color3.new(1, 1, 1)
+LinkButton.Parent = Frame
 
--- Обработка нажатия кнопки
-Button.MouseButton1Click:Connect(function()
-    local inputCode = TextBox.Text:upper()  -- приводим к верхнему регистру для надёжности
-    if VALID_CODES[inputCode] then
-        Title.Text = "Код принят!"
-        wait(1)
-        ScreenGui:Destroy()
-        -- Здесь можно продолжить выполнение основного скрипта
-    else
-        Title.Text = "Неверный код!"
-        -- можно добавить краткую анимацию или мигание, если хочется
-    end
+-- Обработчик кнопки "Отправить"
+SubmitButton.MouseButton1Click:Connect(function()
+    local inputText = TextBox.Text
+    -- Пример действия — вывод текста в консоль
+    print("Вы ввели: " .. inputText)
+    -- Здесь можно вставить ваш функционал (например, выполнение скрипта)
+end)
+
+-- Обработчик кнопки-ссылки
+LinkButton.MouseButton1Click:Connect(function()
+    setclipboard("https://t.me/yourchannel") -- замените ссылку на вашу
+    print("Ссылка скопирована в буфер обмена!")
 end)
