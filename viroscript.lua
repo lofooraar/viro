@@ -1,9 +1,7 @@
--- // Простой GUI для Roblox (подходит для Delta Executor)
-
--- Удаление предыдущего GUI (если есть)
+-- Удалить, если уже открыт
 pcall(function() game.CoreGui.SimpleGui:Destroy() end)
 
--- Создание интерфейса
+-- Создание GUI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "SimpleGui"
 ScreenGui.Parent = game.CoreGui
@@ -14,6 +12,7 @@ Frame.Size = UDim2.new(0, 300, 0, 150)
 Frame.Position = UDim2.new(0.5, -150, 0.5, -75)
 Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Frame.BorderSizePixel = 0
+Frame.Visible = true
 Frame.Parent = ScreenGui
 
 -- Поле для ввода
@@ -44,16 +43,38 @@ LinkButton.BackgroundColor3 = Color3.fromRGB(50, 100, 200)
 LinkButton.TextColor3 = Color3.new(1, 1, 1)
 LinkButton.Parent = Frame
 
--- Обработчик кнопки "Отправить"
+-- Обработчик "Отправить"
 SubmitButton.MouseButton1Click:Connect(function()
-    local inputText = TextBox.Text
-    -- Пример действия — вывод текста в консоль
-    print("Вы ввели: " .. inputText)
-    -- Здесь можно вставить ваш функционал (например, выполнение скрипта)
+    print("Вы ввели: " .. TextBox.Text)
 end)
 
--- Обработчик кнопки-ссылки
+-- Обработчик перехода по ссылке
 LinkButton.MouseButton1Click:Connect(function()
-    setclipboard("https://t.me/yourchannel") -- замените ссылку на вашу
-    print("Ссылка скопирована в буфер обмена!")
+    setclipboard("https://t.me/yourchannel") -- ← Ваша ссылка
+    print("Ссылка скопирована!")
+end)
+
+-- // Кнопка-сворачивающая аватарка (в стиле Берсерка)
+
+local ToggleButton = Instance.new("ImageButton")
+ToggleButton.Name = "BerserkIcon"
+ToggleButton.Size = UDim2.new(0, 50, 0, 50)
+ToggleButton.Position = UDim2.new(0, 10, 0, 10)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ToggleButton.BackgroundTransparency = 0
+ToggleButton.BorderSizePixel = 0
+ToggleButton.Image = "rbxassetid://15468381138" -- <- ID символа жертвы из Берсерка (белый на чёрном)
+ToggleButton.ScaleType = Enum.ScaleType.Fit
+ToggleButton.Parent = ScreenGui
+
+-- Округление аватарки
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(1, 0) -- круг
+UICorner.Parent = ToggleButton
+
+-- Переключение видимости фрейма
+local toggled = true
+ToggleButton.MouseButton1Click:Connect(function()
+    toggled = not toggled
+    Frame.Visible = toggled
 end)
