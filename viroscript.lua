@@ -1,3 +1,5 @@
+-- После прохождения по сократителю ссылок вы получаете другой скрипт и код к нему
+
 pcall(function() game.CoreGui.ViroGui:Destroy() end)
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ViroGui"
